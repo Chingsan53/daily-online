@@ -22,3 +22,12 @@ export const products = [
     tags: "chocolate frosted classic donut",
   },
 ];
+
+export const categories = [
+  { id: "all", label: "All treats" },
+  { id: "classic", label: "Classic Donuts" },
+  { id: "specialty", label: "Drinks & Combos" },
+  { id: "pastries", label: "Pastries" },
+];
+
+export const money = (amount) => `$${amount.toFixed(2)}`;
