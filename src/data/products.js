@@ -6,18 +6,17 @@ export const products = [
     category: "classic",
     desc: "Pillowy dough, delicate vanilla glaze.",
     image:
-      "https://www.pexels.com/photo/delicious-assortment-of-fresh-glazed-donuts-30512881/",
+      "https://images.pexels.com/photos/30512881/pexels-photo-30512881.jpeg",
     alt: "Fresh doughnuts stacked on a wooden board",
     tags: "original glazed classic vanilla donut",
   },
   {
-    id: "chocolate",
-    name: "Chocolate Frosted",
-    price: 1.95,
+    id: "sprinkle",
+    name: "Fancy Donuts",
+    price: 2.5,
     category: "classic",
     desc: "Rich chocolate icing on a soft ring.",
-    image:
-      "https://www.pexels.com/photo/delicious-assortment-of-fresh-glazed-donuts-30512881/",
+    image: "https://images.pexels.com/photos/4686959/pexels-photo-4686959.jpeg",
     alt: "Glossy chocolate-covered donut",
     tags: "chocolate frosted classic donut",
   },

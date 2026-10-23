@@ -6,6 +6,7 @@ import { products, categories } from "@/data/products";
 import MenuSearch from "@/components/MenuSearch";
 import CategoryFilter from "@/components/CategoryFilter";
 import FeaturedProduct from "@/components/FeaturedProduct";
+import ProductCard from "@/components/ProductCard";
 
 export default function MenuPage() {
   const [category, setCategory] = useState("all");
@@ -50,6 +51,33 @@ export default function MenuPage() {
         setCategory={setCategory}
       />
       {showFeature && <FeaturedProduct />}
+
+      <div className="section-head">
+        <h2 className="serif">The good stuff</h2>
+        <p aria-live="polite">{filtered.length} treats</p>
+      </div>
+      {filtered.length ? (
+        <div className="grid grid-cols-2 gap-[11px] sm:gap-[17px] md:grid-cols-3 lg:grid-cols-4">
+          {filtered.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      ) : (
+        <div className="empty">
+          <div className="icon">🍩</div>
+          <h2 className="serif">No treats found</h2>
+          <p>Try another search or category.</p>
+          <button
+            className="primary"
+            onClick={() => {
+              setQuery("");
+              setCategory("all");
+            }}
+          >
+            Show all treats
+          </button>
+        </div>
+      )}
     </main>
   );
 }

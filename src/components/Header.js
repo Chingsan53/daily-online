@@ -9,7 +9,7 @@ export default function Header() {
 
   return (
     <header className="border-b border-[var(--line)] bg-[#fffaf3]">
-      <div>
+      <div className="mx-auto flex max-w-[1120px] items-center justify-between gap-3 px-4 py-[18px] sm:px-5">
         <Link href="/menu" className="text-left">
           <span className="serif block text-[25px] font-bold leading-none">
             Daily Donuts

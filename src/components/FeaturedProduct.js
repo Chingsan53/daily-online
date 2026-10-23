@@ -14,7 +14,7 @@ export default function FeaturedProduct() {
           Berry-pink glaze, a shower of sprinkles, and pure happiness. $2.50
         </p>
         <button className="primary mt-4" onClick={() => addItem("strawberry")}>
-          Add to bag · $4.25
+          Add to bag · $2.50
         </button>
       </div>
       <img

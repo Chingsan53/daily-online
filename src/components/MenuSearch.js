@@ -8,7 +8,7 @@ export default function MenuSearch({ query, setQuery }) {
       <label htmlFor="menu-search" className="sr-only">
         Search the menu
       </label>
-      <div>
+      <div className="search-wrap">
         <Search size={19} className="shrink-0 text-[var(--muted)]" />
         <input
           id="menu-search"
