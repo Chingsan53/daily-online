@@ -27,6 +27,17 @@ export default function MenuPage() {
   const showFeature =
     !query.trim() && (category === "all" || category === "classic");
 
+  const groupedProducts = useMemo(() => {
+    return categories
+      .filter((cat) => cat.id !== "all")
+      .filter((cat) => category === "all" || cat.id === category)
+      .map((cat) => ({
+        ...cat,
+        products: filtered.filter((product) => product.category === cat.id),
+      }))
+      .filter((cat) => cat.products.length > 0);
+  }, [category, filtered]);
+
   return (
     <main className="mx-auto w-full max-w-[1120px] px-4 pb-28 sm:px-5">
       <section className="pb-5 pt-[26px] sm:pt-[34px]">
@@ -52,14 +63,33 @@ export default function MenuPage() {
       />
       {showFeature && <FeaturedProduct />}
 
-      <div className="section-head">
+      {/* <div className="section-head">
         <h2 className="serif">The good stuff</h2>
         <p aria-live="polite">{filtered.length} treats</p>
-      </div>
-      {filtered.length ? (
-        <div className="grid grid-cols-2 gap-[11px] sm:gap-[17px] md:grid-cols-3 lg:grid-cols-4">
-          {filtered.map((product) => (
-            <ProductCard key={product.id} product={product} />
+      </div> */}
+      {groupedProducts.length > 0 ? (
+        <div className="space-y-7">
+          {groupedProducts.map((group, index) => (
+            <section key={group.id}>
+              {/* Divider between categories */}
+              {index > 0 && <div className="mb-6 border-t border-stone-200" />}
+
+              {/* Category heading */}
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="serif text-2xl">{group.label}</h3>
+
+                <span className="muted text-sm">
+                  {group.products.length} items
+                </span>
+              </div>
+
+              {/* Products */}
+              <div className="grid grid-cols-2 gap-[11px] sm:gap-[17px] md:grid-cols-3 lg:grid-cols-4">
+                {group.products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            </section>
           ))}
         </div>
       ) : (
