@@ -1,16 +1,35 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MapPin } from "lucide-react";
-import { products, categories } from "@/data/products";
+import { getProducts } from "@/lib/products";
+import { categories } from "@/data/products";
+// import { products, categories } from "@/data/products";
+// import { products, categories } from "@/lib";
 import MenuSearch from "@/components/MenuSearch";
 import CategoryFilter from "@/components/CategoryFilter";
 import FeaturedProduct from "@/components/FeaturedProduct";
 import ProductCard from "@/components/ProductCard";
 
 export default function MenuPage() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState("all");
   const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        const data = await getProducts();
+        setProducts(data);
+      } catch (error) {
+        console.error("Failed to laod products:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadProducts();
+  }, []);
 
   const filtered = useMemo(
     () =>
@@ -21,7 +40,7 @@ export default function MenuPage() {
             .toLowerCase()
             .includes(query.trim().toLowerCase()),
       ),
-    [category, query],
+    [products, category, query],
   );
 
   const showFeature =
@@ -67,14 +86,14 @@ export default function MenuPage() {
         <h2 className="serif">The good stuff</h2>
         <p aria-live="polite">{filtered.length} treats</p>
       </div> */}
-      {groupedProducts.length > 0 ? (
+      {loading ? (
+        <p className="py-10 text-center">Loading menu...</p>
+      ) : groupedProducts.length > 0 ? (
         <div className="space-y-7">
           {groupedProducts.map((group, index) => (
             <section key={group.id}>
-              {/* Divider between categories */}
               {index > 0 && <div className="mb-6 border-t border-stone-200" />}
 
-              {/* Category heading */}
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="serif text-2xl">{group.label}</h3>
 
@@ -83,7 +102,6 @@ export default function MenuPage() {
                 </span>
               </div>
 
-              {/* Products */}
               <div className="grid grid-cols-2 gap-[11px] sm:gap-[17px] md:grid-cols-3 lg:grid-cols-4">
                 {group.products.map((product) => (
                   <ProductCard key={product.id} product={product} />
@@ -97,6 +115,7 @@ export default function MenuPage() {
           <div className="icon">🍩</div>
           <h2 className="serif">No treats found</h2>
           <p>Try another search or category.</p>
+
           <button
             className="primary"
             onClick={() => {
