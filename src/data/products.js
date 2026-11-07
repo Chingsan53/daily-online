@@ -97,6 +97,8 @@ export const categories = [
   { id: "fancy", label: "Fancy Donuts" },
   { id: "specialty", label: "Drinks & Combos" },
   { id: "pastries", label: "Pastries" },
+  { id: "coffee", label: "Coffee" },
+  { id: "espresso", label: "Espresso & Specialty" },
 ];
 
 export const money = (amount) => `$${amount.toFixed(2)}`;

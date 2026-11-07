@@ -14,7 +14,7 @@ export default function Header() {
           <span className="serif block text-[25px] font-bold leading-none">
             Daily Donuts
           </span>
-          <span className="eyebrow muted mt-1 block">GOOD DAYS START HERE</span>
+          <span className="eyebrow muted mt-1 block ">DONUTS & PASTRIES</span>
         </Link>
         <Link href="/cart" className="cart-button" aria-label="View Bag">
           <ShoppingBag size={17} />
