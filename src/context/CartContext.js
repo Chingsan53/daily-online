@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { products } from "@/data/products";
 
@@ -17,6 +17,8 @@ export function CartProvider({ children }) {
   const [pickupTime, setPickupTime] = useState("ASAP · about 20 minutes");
   const [orderNumber, setOrderNumber] = useState("");
   const [confirmation, setConfirmation] = useState("");
+  //const [cartItems, setCartItems] = useState([]);
+  const [isCartLoaded, setIsCartLoaded] = useState(false);
 
   const cartItems = useMemo(() => {
     const regularItems = products
@@ -139,11 +141,39 @@ export function CartProvider({ children }) {
     setConfirmation("");
   }
 
+  // Session save
+  // Restore cart when the app loads
+  useEffect(() => {
+    try {
+      const savedCart = sessionStorage.getItem("daily-donuts-cart");
+      if (savedCart) {
+        setCart(JSON.parse(savedCart));
+      }
+    } catch (error) {
+      console.error("Failed to restore cart:", error);
+    } finally {
+      setIsCartLoaded(true);
+    }
+  }, []);
+
+  // Save cart whenever it changes
+  useEffect(() => {
+    if (!isCartLoaded) return;
+
+    try {
+      sessionStorage.setItem("daily-donuts-cart", JSON.stringify(cart));
+    } catch (error) {
+      console.error("Error saving cart:", error);
+    }
+  }, [cart, isCartLoaded]);
+
   return (
     <CartContext.Provider
       value={{
         cart,
+        setCart,
         cartItems,
+        isCartLoaded,
         quantity,
         subtotal,
         addItem,
