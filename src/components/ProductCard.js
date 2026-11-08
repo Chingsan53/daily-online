@@ -1,27 +1,51 @@
 "use client";
 
-import { Plus } from "lucide-react";
+import { Plus, SlidersHorizontal } from "lucide-react";
 import { money } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, onCustomize }) {
   const { addItem } = useCart();
+
+  const hasModifiers = product.modifierGroups?.length > 0;
+
+  const price = product.basePrice ?? product.price ?? 0;
+
+  function handleAdd() {
+    if (hasModifiers) {
+      onCustomize?.();
+    } else {
+      addItem(product.id);
+    }
+  }
 
   return (
     <article className="product">
-      <img loading="lazy" src={product.image} alt={product.alt} />
+      <img
+        loading="lazy"
+        src={product.image}
+        alt={product.alt || product.name}
+      />
       <div className="product-info">
         <h3>{product.name}</h3>
         <p>{product.desc}</p>
         <div className="product-bottom">
-          <span className="price">{money(product.price)}</span>
+          <span className="price">
+            {hasModifiers ? `From ${money(product.price)}` : money(price)}
+          </span>
           <button
             className="add"
             type="button"
-            onClick={() => addItem(product.id)}
-            aria-label={`Add ${product.name}`}
+            onClick={handleAdd}
+            aria-label={
+              hasModifiers ? `Customize ${product.name}` : `Add ${product.name}`
+            }
           >
-            <Plus size={21} />
+            {hasModifiers ? (
+              <SlidersHorizontal size={19} />
+            ) : (
+              <Plus size={21} />
+            )}
           </button>
         </div>
       </div>

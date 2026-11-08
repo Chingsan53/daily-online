@@ -10,12 +10,18 @@ import MenuSearch from "@/components/MenuSearch";
 import CategoryFilter from "@/components/CategoryFilter";
 import FeaturedProduct from "@/components/FeaturedProduct";
 import ProductCard from "@/components/ProductCard";
+import ProductCustomizationModal from "@/components/ProductCustomizationModal";
+import { useCart } from "@/context/CartContext";
 
 export default function MenuPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState("all");
   const [query, setQuery] = useState("");
+
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const { addCustomizedItem } = useCart();
 
   useEffect(() => {
     async function loadProducts() {
@@ -31,17 +37,33 @@ export default function MenuPage() {
     loadProducts();
   }, []);
 
-  const filtered = useMemo(
-    () =>
-      products.filter(
-        (product) =>
-          (category === "all" || product.category === category) &&
-          `${product.name} ${product.tags} ${product.desc}`
-            .toLowerCase()
-            .includes(query.trim().toLowerCase()),
-      ),
-    [products, category, query],
-  );
+  const filtered = useMemo(() => {
+    const search = query.trim().toLowerCase();
+
+    return products.filter((product) => {
+      const matchesCategory =
+        category === "all" || product.category === category;
+
+      const modifierText = (product.modifierGroups || [])
+        .flatMap((group) => [
+          group.name,
+          ...(group.options || []).map((option) => option.name),
+        ])
+        .join(" ");
+
+      const searchableText = [
+        product.name,
+        product.tags,
+        product.desc,
+        modifierText,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      return matchesCategory && searchableText.includes(search);
+    });
+  }, [products, category, query]);
 
   const showFeature =
     !query.trim() && (category === "all" || category === "classic");
@@ -104,7 +126,11 @@ export default function MenuPage() {
 
               <div className="grid grid-cols-2 gap-[11px] sm:gap-[17px] md:grid-cols-3 lg:grid-cols-4">
                 {group.products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onCustomize={() => setSelectedProduct(product)}
+                  />
                 ))}
               </div>
             </section>
@@ -126,6 +152,14 @@ export default function MenuPage() {
             Show all treats
           </button>
         </div>
+      )}
+
+      {selectedProduct && (
+        <ProductCustomizationModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          onAddToCart={addCustomizedItem}
+        />
       )}
     </main>
   );
